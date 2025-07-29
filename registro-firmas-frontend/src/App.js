@@ -248,6 +248,11 @@ function injectStyles() {
             .form-group { grid-template-columns: 1fr;}
             .table-list-header, .transport-card { grid-template-columns: 1.1fr 1fr 1.3fr auto;}
         }
+        body.dark .transport-card .info-value {
+  color: #1a1a1a !important;
+}
+
+        
     `;
     document.head.appendChild(style);
   }
