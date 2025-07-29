@@ -177,7 +177,7 @@ function injectStyles() {
         .import-btn, .export-btn { margin-left: 5px; font-size: 0.97rem;}
         .table-list-header, .transport-card {
             display: grid;
-            grid-template-columns: 2fr 1fr 1.2fr auto;
+            grid-template-columns: 2fr 0.7fr 1.8fr auto;
             align-items: center;
             font-size: 1.08rem;
         }
@@ -405,13 +405,12 @@ const App = () => {
         let thNombre = `Nombre del Transporte <span class="sortable" data-field="nombre" style="cursor:pointer">${this.sortField==='nombre'?(this.sortDir==='asc'?'▼':'▲'):''}</span>`;
         let thRol = `Número de ROL <span class="sortable" data-field="numeroRol" style="cursor:pointer">${this.sortField==='numeroRol'?(this.sortDir==='asc'?'▼':'▲'):''}</span>`;
         let thFecha = `Fecha de Vencimiento <span class="sortable" data-field="fechaVencimiento" style="cursor:pointer">${this.sortField==='fechaVencimiento'?(this.sortDir==='asc'?'▼':'▲'):''}</span>`;
-        let tableHeader = `<div style="display:grid;grid-template-columns:2fr 1fr 1.2fr auto;align-items:center;font-weight:700;font-size:1.1rem;padding:7px 14px 3px 14px;">
-            <div>${thNombre}</div>
-            <div>${thRol}</div>
-            <div>${thFecha}</div>
-            <div></div>
-        </div>`;
-
+        let tableHeader = `<div style="display:grid;grid-template-columns:2fr 0.7fr 1.8fr auto;align-items:center;font-weight:700;font-size:1.1rem;padding:7px 14px 3px 14px;">
+          <div>${thNombre}</div>
+          <div>${thRol}</div>
+          <div>${thFecha}</div>
+          <div></div>
+          </div>`;
         if (arr.length===0) {
           container.innerHTML = `<div class="empty-state">
               <h3>No hay transportes registrados</h3>
