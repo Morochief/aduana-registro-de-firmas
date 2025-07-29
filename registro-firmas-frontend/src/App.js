@@ -405,21 +405,29 @@ const App = () => {
         let thNombre = `Nombre del Transporte <span class="sortable" data-field="nombre" style="cursor:pointer">${this.sortField==='nombre'?(this.sortDir==='asc'?'▼':'▲'):''}</span>`;
         let thRol = `Número de ROL <span class="sortable" data-field="numeroRol" style="cursor:pointer">${this.sortField==='numeroRol'?(this.sortDir==='asc'?'▼':'▲'):''}</span>`;
         let thFecha = `Fecha de Vencimiento <span class="sortable" data-field="fechaVencimiento" style="cursor:pointer">${this.sortField==='fechaVencimiento'?(this.sortDir==='asc'?'▼':'▲'):''}</span>`;
-        let tableHeader = `<div style="display:grid;grid-template-columns:2fr 0.7fr 1.8fr auto;align-items:center;font-weight:700;font-size:1.1rem;padding:7px 14px 3px 14px;">
-           <div class="sortable" data-field="nombre" style="cursor:pointer;display:flex;align-items:center;gap:7px;">
-            Nombre del Transporte
-      <span style="color:#667eea;font-size:1.1em;">${this.sortField==='nombre'?(this.sortDir==='asc'?'▼':'▲'):''}</span>
-    </div>
-    <div class="sortable" data-field="numeroRol" style="cursor:pointer;display:flex;align-items:center;gap:7px;">
-      Número de ROL
-      <span style="color:#667eea;font-size:1.1em;">${this.sortField==='numeroRol'?(this.sortDir==='asc'?'▼':'▲'):''}</span>
-    </div>
-    <div class="sortable" data-field="fechaVencimiento" style="cursor:pointer;display:flex;align-items:center;gap:7px;">
-      Fecha de Vencimiento
-      <span style="color:#667eea;font-size:1.1em;">${this.sortField==='fechaVencimiento'?(this.sortDir==='asc'?'▼':'▲'):''}</span>
-    </div>
-    <div></div>
-</div>`;
+        let tableHeader = `
+          <div style="display:grid;grid-template-columns:2fr 0.7fr 1.8fr auto;align-items:center;font-weight:700;font-size:1.1rem;padding:7px 14px 3px 14px;">
+            <div class="sortable" data-field="nombre" style="cursor:pointer;display:flex;align-items:center;gap:7px;">
+              Nombre del Transporte
+              <span style="color:#667eea;font-size:1.1em;${this.sortField==='nombre' ? 'border:1.5px solid #667eea;border-radius:4px;padding:0 2px;' : ''}">
+                ${this.sortField==='nombre'?(this.sortDir==='asc'?'▼':'▲'):''}
+              </span>
+            </div>
+            <div class="sortable" data-field="numeroRol" style="cursor:pointer;display:flex;align-items:center;gap:7px;">
+              Número de ROL
+            <span style="color:#667eea;font-size:1.1em;${this.sortField==='numeroRol' ? 'border:1.5px solid #667eea;border-radius:4px;padding:0 2px;' : ''}">
+              ${this.sortField==='numeroRol'?(this.sortDir==='asc'?'▼':'▲'):''}
+            </span>
+          </div>
+          <div class="sortable" data-field="fechaVencimiento" style="cursor:pointer;display:flex;align-items:center;gap:7px;">
+            Fecha de Vencimiento
+          <span style="color:#667eea;font-size:1.1em;${this.sortField==='fechaVencimiento' ? 'border:1.5px solid #667eea;border-radius:4px;padding:0 2px;' : ''}">
+            ${this.sortField==='fechaVencimiento'?(this.sortDir==='asc'?'▼':'▲'):''}
+          </span>
+        </div>
+        <div></div>
+      </div>
+`;
         if (arr.length===0) {
           container.innerHTML = `<div class="empty-state">
               <h3>No hay transportes registrados</h3>
