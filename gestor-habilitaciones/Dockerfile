@@ -1,14 +1,12 @@
-# Usa una imagen oficial de Java 17
-FROM eclipse-temurin:17-jdk
-
-# Directorio de trabajo dentro del contenedor
+# Etapa 1: Construir el jar con Maven (usa Maven Wrapper incluido en tu repo)
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
+COPY . .
+RUN ./mvnw clean package -DskipTests
 
-# Copia tu JAR generado al contenedor
-COPY target/gestor-habilitaciones-0.0.1-SNAPSHOT.jar app.jar
-
-# Expón el puerto 8080 (Spring Boot usa 8080 por defecto)
+# Etapa 2: Imagen final solo con Java y el jar generado
+FROM eclipse-temurin:17-jre
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
-
-# Comando de inicio
 ENTRYPOINT ["java", "-jar", "app.jar"]
