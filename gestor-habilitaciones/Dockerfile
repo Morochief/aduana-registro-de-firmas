@@ -1,7 +1,8 @@
-# Etapa 1: Construir el jar con Maven (usa Maven Wrapper incluido en tu repo)
+# Etapa 1: Construir el jar con Maven Wrapper
 FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY . .
+RUN chmod +x mvnw
 RUN ./mvnw clean package -DskipTests
 
 # Etapa 2: Imagen final solo con Java y el jar generado
