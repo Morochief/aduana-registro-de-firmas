@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080/api/transportes";
+const API_URL = "https://gestor-habilitaciones.onrender.com/api/transportes";
 
 export async function getTransportes() {
   const response = await fetch(API_URL);
