@@ -1,4 +1,5 @@
-const API_URL = "https://gestor-habilitaciones.onrender.com/api/transportes";
+const API_URL = "https://aduana-registro-de-firmas.onrender.com/api";
+
 
 export async function getTransportes() {
   const response = await fetch(API_URL);
