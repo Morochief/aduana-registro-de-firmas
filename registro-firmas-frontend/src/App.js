@@ -195,7 +195,14 @@ body.dark .input-group input {background: #191a23; border-color: #32334a; color:
     background: var(--table-head);
     border-bottom: 1.5px solid var(--card-border);
 }
-.sortable {cursor:pointer; user-select: none; padding-left: 4px;}
+.sortable {
+    cursor: pointer;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+/* rest of transport-card, status-badge, responsive... */
 .transport-list {display:block;}
 .transport-card {
     background: var(--card-bg);
@@ -207,9 +214,9 @@ body.dark .input-group input {background: #191a23; border-color: #32334a; color:
     margin-bottom: 8px;
     margin-top: 0;
 }
-.transport-card.warning { border-left-color: #f39c12; background: linear-gradient(135deg, #fff9e6 0%, #fff 100%);}
-.transport-card.danger { border-left-color: #e74c3c; background: linear-gradient(135deg, #ffebee 0%, #fff 100%);}
-.info-value { font-size: 1.04rem; font-weight: 500; color: var(--text-main);}
+.transport-card.warning { border-left-color: #f39c12; background: linear-gradient(135deg, #fff9e6 0%, #fff 100%); }
+.transport-card.danger { border-left-color: #e74c3c; background: linear-gradient(135deg, #ffebee 0%, #fff 100%); }
+.info-value { font-size: 1.04rem; font-weight: 500; color: var(--text-main); }
 .status-badge {
     margin-left: 7px;
     margin-top: 3px;
@@ -220,9 +227,9 @@ body.dark .input-group input {background: #191a23; border-color: #32334a; color:
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
-.status-ok { background: var(--badge-ok); color: var(--badge-ok-txt);}
-.status-warning { background: var(--badge-warning); color: var(--badge-warning-txt);}
-.status-danger { background: var(--badge-danger); color: var(--badge-danger-txt);}
+.status-ok { background: var(--badge-ok); color: var(--badge-ok-txt); }
+.status-warning { background: var(--badge-warning); color: var(--badge-warning-txt); }
+.status-danger { background: var(--badge-danger); color: var(--badge-danger-txt); }
 .card-actions {
     display: flex;
     gap: 5px;
@@ -235,26 +242,26 @@ body.dark .input-group input {background: #191a23; border-color: #32334a; color:
     margin-bottom: 14px;
     font-weight: 500;
 }
-.alert-info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb;}
+.alert-info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
 .empty-state {
     text-align: center;
     padding: 32px 14px;
     color: #666;
 }
-.empty-state h3 {font-size: 1.18rem; margin-bottom: 10px; color: #999;}
+.empty-state h3 { font-size: 1.18rem; margin-bottom: 10px; color: #999; }
 @media (max-width: 850px) {
-    .container { margin: 9px;}
-    .form-section, .content { padding: 7px;}
-    .table-list-header, .transport-card { grid-template-columns: 2fr 1fr 1.25fr auto;}
+    .container { margin: 9px; }
+    .form-section, .content { padding: 7px; }
+    .table-list-header, .transport-card { grid-template-columns: 2fr 1fr 1.25fr auto; }
 }
 @media (max-width: 600px) {
-    .form-section { padding: 2px;}
-    .content { padding: 2px;}
-    .table-list-header, .transport-card { grid-template-columns: 1fr 1fr 1fr auto; font-size:0.95rem;}
+    .form-section { padding: 2px; }
+    .content { padding: 2px; }
+    .table-list-header, .transport-card { grid-template-columns: 1fr 1fr 1fr auto; font-size:0.95rem; }
 }
 @media (max-width: 430px) {
-    .form-group { grid-template-columns: 1fr;}
-    .table-list-header, .transport-card { grid-template-columns: 1.1fr 1fr 1.3fr auto;}
+    .form-group { grid-template-columns: 1fr; }
+    .table-list-header, .transport-card { grid-template-columns: 1.1fr 1fr 1.3fr auto; }
 }
 body.dark .transport-card .info-value {
     color: #1a1a1a !important;
@@ -263,7 +270,6 @@ body.dark .transport-card .info-value {
     document.head.appendChild(style);
   }
 }
-
 
 const getStatus = (fechaVencimiento) => {
   const hoy = new Date();
@@ -275,21 +281,21 @@ const getStatus = (fechaVencimiento) => {
       status: "vencido",
       class: "danger",
       text: `VENCIDO HACE ${Math.abs(diffDays)} DÍAS`,
-      days: diffDays
+      days: diffDays,
     };
   else if (diffDays <= 30)
     return {
       status: "proximo",
       class: "warning",
       text: `VENCE EN ${diffDays} DÍAS`,
-      days: diffDays
+      days: diffDays,
     };
   else
     return {
       status: "vigente",
       class: "ok",
       text: `VIGENTE (${diffDays} DÍAS)`,
-      days: diffDays
+      days: diffDays,
     };
 };
 
@@ -297,12 +303,8 @@ const App = () => {
   // Estados principales
   const [transportes, setTransportes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [editing, setEditing] = useState(null); // id del transporte editando
-  const [form, setForm] = useState({
-    nombre: "",
-    numeroRol: "",
-    fechaVencimiento: ""
-  });
+  const [editing, setEditing] = useState(null);
+  const [form, setForm] = useState({ nombre: "", numeroRol: "", fechaVencimiento: "" });
   const [noti, setNoti] = useState(null);
 
   // Filtros
@@ -311,11 +313,12 @@ const App = () => {
   const [fFecha, setFFecha] = useState("");
 
   // Dark mode
-  const [dark, setDark] = useState(
-    localStorage.getItem("darkMode") === "1" ? true : false
-  );
+  const [dark, setDark] = useState(localStorage.getItem("darkMode") === "1");
 
-  // Carga inicial y CSS
+  // Ordenamiento
+  const [sortField, setSortField] = useState("nombre");
+  const [sortOrder, setSortOrder] = useState("asc");
+
   useEffect(() => {
     injectStyles();
     loadXLSX();
@@ -328,17 +331,15 @@ const App = () => {
     localStorage.setItem("darkMode", dark ? "1" : "0");
   }, [dark]);
 
-  // Notificación automática (desaparece)
   useEffect(() => {
     if (noti) setTimeout(() => setNoti(null), 2500);
   }, [noti]);
 
-  // CRUD Backend
   async function cargar() {
     setLoading(true);
     try {
       setTransportes(await getTransportes());
-    } catch (e) {
+    } catch {
       setNoti("❌ Error cargando datos");
     }
     setLoading(false);
@@ -350,10 +351,7 @@ const App = () => {
       return setNoti("Completa todos los campos");
     try {
       if (editing) {
-        await updateTransporte(editing, {
-          ...form,
-          fechaCreacion: undefined // El backend lo puede ignorar
-        });
+        await updateTransporte(editing, { ...form, fechaCreacion: undefined });
         setNoti("✏️ Transporte editado correctamente");
       } else {
         await addTransporte(form);
@@ -362,18 +360,14 @@ const App = () => {
       setForm({ nombre: "", numeroRol: "", fechaVencimiento: "" });
       setEditing(null);
       cargar();
-    } catch (e) {
+    } catch {
       setNoti("❌ Error al guardar");
     }
   }
 
   function onEdit(t) {
     setEditing(t.id);
-    setForm({
-      nombre: t.nombre,
-      numeroRol: t.numeroRol,
-      fechaVencimiento: t.fechaVencimiento
-    });
+    setForm({ nombre: t.nombre, numeroRol: t.numeroRol, fechaVencimiento: t.fechaVencimiento });
   }
 
   function onCancelEdit() {
@@ -392,14 +386,29 @@ const App = () => {
     }
   }
 
-  // Filtros y orden
+  function toggleSort(field) {
+    if (sortField === field) {
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortOrder("asc");
+    }
+  }
+
+  // Filtro y orden
   let lista = transportes
-    .filter((t) =>
-      t.nombre.toLowerCase().includes(fNombre.trim().toLowerCase())
-    )
+    .filter((t) => t.nombre.toLowerCase().includes(fNombre.trim().toLowerCase()))
     .filter((t) => t.numeroRol.includes(fRol.trim()))
     .filter((t) => (fFecha ? t.fechaVencimiento === fFecha : true))
-    .sort((a, b) => a.nombre.localeCompare(b.nombre));
+    .sort((a, b) => {
+      let cmp;
+      if (sortField === "fechaVencimiento") {
+        cmp = new Date(a[sortField]) - new Date(b[sortField]);
+      } else {
+        cmp = String(a[sortField]).localeCompare(String(b[sortField]));
+      }
+      return sortOrder === "asc" ? cmp : -cmp;
+    });
 
   // Estadísticas
   let stats = { total: 0, ok: 0, warning: 0, danger: 0 };
@@ -411,13 +420,12 @@ const App = () => {
     else if (s.status === "vencido") stats.danger++;
   });
 
-  // Exportar Excel
   function exportarExcel() {
     if (!window.XLSX) return alert("XLSX no cargado");
     const data = lista.map((t) => ({
       Nombre: t.nombre,
       ROL: t.numeroRol,
-      "Fecha Vencimiento": t.fechaVencimiento
+      "Fecha Vencimiento": t.fechaVencimiento,
     }));
     const ws = window.XLSX.utils.json_to_sheet(data);
     const wb = window.XLSX.utils.book_new();
@@ -425,18 +433,16 @@ const App = () => {
     window.XLSX.writeFile(wb, "transportes.xlsx");
   }
 
-  // Exportar JSON (backup)
   function exportarJSON() {
     const dataStr = JSON.stringify(transportes, null, 2);
-    const dataBlob = new Blob([dataStr], { type: "application/json" });
-    const url = URL.createObjectURL(dataBlob);
+    const blob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
     link.download = "transportes_habilitaciones.json";
     link.click();
   }
 
-  // Importar JSON
   function importarJSON(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -446,15 +452,11 @@ const App = () => {
         const arr = JSON.parse(ev.target.result);
         if (!Array.isArray(arr)) throw new Error("Formato inválido");
         for (let t of arr) {
-          await addTransporte({
-            nombre: t.nombre,
-            numeroRol: t.numeroRol,
-            fechaVencimiento: t.fechaVencimiento
-          });
+          await addTransporte({ nombre: t.nombre, numeroRol: t.numeroRol, fechaVencimiento: t.fechaVencimiento });
         }
         setNoti("✅ Importación completada");
         cargar();
-      } catch (e) {
+      } catch {
         alert("Archivo inválido.");
       }
     };
@@ -462,23 +464,20 @@ const App = () => {
     e.target.value = "";
   }
 
-  // WhatsApp Alert (solo visual)
   function enviarAlertaWhatsapp() {
     const alertas = lista
-      .filter(t => !t.omitido) // <--- SOLO transportes NO OMITIDOS
-      .filter(t => {
+      .filter((t) => !t.omitido)
+      .filter((t) => {
         const s = getStatus(t.fechaVencimiento);
         return (
           (s.status === "vencido" && s.days < 0) ||
           (s.status === "proximo" && s.days <= 7)
         );
       })
-      .map(t => {
+      .map((t) => {
         const s = getStatus(t.fechaVencimiento);
         return s.status === "vencido"
-          ? `🚨 ${t.nombre} (ROL: ${t.numeroRol}) está VENCIDO hace ${Math.abs(
-              s.days
-            )} días`
+          ? `🚨 ${t.nombre} (ROL: ${t.numeroRol}) está VENCIDO hace ${Math.abs(s.days)} días`
           : `⚠️ ${t.nombre} (ROL: ${t.numeroRol}) vence en ${s.days} días`;
       });
     if (alertas.length === 0) {
@@ -486,29 +485,20 @@ const App = () => {
       return;
     }
     const mensaje = alertas.join("\n");
-    const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(
-      mensaje
-    )}`;
+    const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(mensaje)}`;
     window.open(whatsappUrl, "_blank");
   }
 
-  // Dark mode toggle
   function toggleDark() {
     setDark((v) => !v);
   }
 
-  // Render UI
   return (
     <div className="container">
       <div className="header">
         <h1>🚛 Gestor de Habilitaciones</h1>
         <p>Sistema de control de vencimientos para transportes de aduana</p>
-        <button
-          className="toggle-dark"
-          aria-label="Cambiar modo claro/oscuro"
-          title="Modo claro/oscuro"
-          onClick={toggleDark}
-        >
+        <button className="toggle-dark" aria-label="Cambiar modo claro/oscuro" title="Modo claro/oscuro" onClick={toggleDark}>
           {dark ? "☀️" : "🌙"}
         </button>
       </div>
@@ -532,67 +522,27 @@ const App = () => {
           </div>
         </div>
         <div className="form-section">
-          <h2>
-            ➕{" "}
-            <span id="formTitle">
-              {editing ? "Editar Transporte" : "Agregar Nuevo Transporte"}
-            </span>
-          </h2>
+          <h2>➕ <span id="formTitle">{editing ? "Editar Transporte" : "Agregar Nuevo Transporte"}</span></h2>
           <form onSubmit={onSubmit} id="transportForm">
             <div className="form-group">
               <div className="input-group">
                 <label htmlFor="nombre">Nombre del Transporte</label>
-                <input
-                  type="text"
-                  id="nombre"
-                  required
-                  placeholder="Ej: Transporte López S.A."
-                  value={form.nombre}
-                  onChange={(e) =>
-                    setForm({ ...form, nombre: e.target.value })
-                  }
-                />
+                <input type="text" id="nombre" required placeholder="Ej: Transporte López S.A." value={form.nombre} onChange={(e) => setForm({ ...form, nombre: e.target.value })} />
               </div>
               <div className="input-group">
                 <label htmlFor="numeroRol">Número de ROL</label>
-                <input
-                  type="text"
-                  id="numeroRol"
-                  required
-                  placeholder="Ej: 12345"
-                  value={form.numeroRol}
-                  onChange={(e) =>
-                    setForm({ ...form, numeroRol: e.target.value })
-                  }
-                />
+                <input type="text" id="numeroRol" required placeholder="Ej: 12345" value={form.numeroRol} onChange={(e) => setForm({ ...form, numeroRol: e.target.value })} />
               </div>
               <div className="input-group">
                 <label htmlFor="fechaVencimiento">Fecha de Vencimiento</label>
-                <input
-                  type="date"
-                  id="fechaVencimiento"
-                  required
-                  value={form.fechaVencimiento}
-                  onChange={(e) =>
-                    setForm({ ...form, fechaVencimiento: e.target.value })
-                  }
-                />
+                <input type="date" id="fechaVencimiento" required value={form.fechaVencimiento} onChange={(e) => setForm({ ...form, fechaVencimiento: e.target.value })} />
               </div>
             </div>
             <button type="submit" className="btn" id="submitBtn">
-              ➕{" "}
-              <span id="submitBtnText">
-                {editing ? "Guardar Cambios" : "Agregar Transporte"}
-              </span>
+              ➕ <span id="submitBtnText">{editing ? "Guardar Cambios" : "Agregar Transporte"}</span>
             </button>
             {editing && (
-              <button
-                type="button"
-                className="btn btn-danger"
-                id="cancelEditBtn"
-                style={{ marginLeft: "10px" }}
-                onClick={onCancelEdit}
-              >
+              <button type="button" className="btn btn-danger" id="cancelEditBtn" style={{ marginLeft: "10px" }} onClick={onCancelEdit}>
                 ❌ Cancelar Edición
               </button>
             )}
@@ -600,158 +550,67 @@ const App = () => {
         </div>
         <div className="alert alert-info">
           <strong>📱 Integración WhatsApp:</strong> Para recibir alertas automáticas por WhatsApp, necesitarás implementar un servidor backend con la API de WhatsApp Business. Esta versión web te mostrará las alertas en pantalla y podrás exportar los datos.
-          <button
-            style={{
-              marginLeft: 10,
-              background: "var(--btn-gradient)",
-              color: "#fff",
-              border: "none",
-              borderRadius: 6,
-              padding: "2px 11px",
-              cursor: "pointer"
-            }}
-            onClick={enviarAlertaWhatsapp}
-            title="Enviar alertas a WhatsApp"
-          >
+          <button style={{ marginLeft: 10, background: "var(--btn-gradient)", color: "#fff", border: "none", borderRadius: 6, padding: "2px 11px", cursor: "pointer" }} onClick={enviarAlertaWhatsapp} title="Enviar alertas a WhatsApp">
             🚨 WhatsApp
           </button>
         </div>
         <div className="filter-bar">
           <b>Filtrar:</b>
-          <input
-            type="text"
-            placeholder="Nombre..."
-            value={fNombre}
-            onChange={(e) => setFNombre(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="ROL..."
-            value={fRol}
-            onChange={(e) => setFRol(e.target.value)}
-          />
-          <input
-            type="date"
-            placeholder="Vencimiento..."
-            value={fFecha}
-            onChange={(e) => setFFecha(e.target.value)}
-          />
-          <button
-            className="btn export-btn"
-            onClick={exportarExcel}
-            title="Exportar Excel"
-          >
-            📥 Excel
-          </button>
-          <button
-            className="btn export-btn"
-            onClick={exportarJSON}
-            title="Exportar Backup JSON"
-          >
-            💾 Backup
-          </button>
+          <input type="text" placeholder="Nombre..." value={fNombre} onChange={(e) => setFNombre(e.target.value)} />
+          <input type="text" placeholder="ROL..." value={fRol} onChange={(e) => setFRol(e.target.value)} />
+          <input type="date" placeholder="Vencimiento..." value={fFecha} onChange={(e) => setFFecha(e.target.value)} />
+          <button className="btn export-btn" onClick={exportarExcel}>📥 Excel</button>
+          <button className="btn export-btn" onClick={exportarJSON}>💾 Backup</button>
           <label className="btn import-btn" style={{ cursor: "pointer" }} title="Importar Backup">
             📤 Importar
-            <input
-              type="file"
-              accept=".json"
-              style={{ display: "none" }}
-              onChange={importarJSON}
-            />
+            <input type="file" accept=".json" style={{ display: "none" }} onChange={importarJSON} />
           </label>
         </div>
         <div className="form-section">
           <h2>📋 Lista de Transportes</h2>
           <div className="transport-list" id="transportList">
             {loading ? (
-              <div className="empty-state">
-                <h3>Cargando...</h3>
-              </div>
+              <div className="empty-state"><h3>Cargando...</h3></div>
             ) : lista.length === 0 ? (
-              <div className="empty-state">
-                <h3>No hay transportes registrados</h3>
-                <p>Agrega tu primer transporte usando el formulario anterior</p>
-              </div>
+              <div className="empty-state"><h3>No hay transportes registrados</h3><p>Agrega tu primer transporte usando el formulario anterior</p></div>
             ) : (
               <>
                 <div className="table-list-header">
-                  <div>Nombre del Transporte</div>
-                  <div>Número de ROL</div>
-                  <div>Fecha de Vencimiento</div>
+                  <div className="sortable" onClick={() => toggleSort("nombre")}>
+                    Nombre {sortField === "nombre" && (sortOrder === "asc" ? "↑" : "↓")}
+                  </div>
+                  <div className="sortable" onClick={() => toggleSort("numeroRol")}>
+                    Número de ROL {sortField === "numeroRol" && (sortOrder === "asc" ? "↑" : "↓")}
+                  </div>
+                  <div className="sortable" onClick={() => toggleSort("fechaVencimiento")}>
+                    Fecha de Vencimiento {sortField === "fechaVencimiento" && (sortOrder === "asc" ? "↑" : "↓")}
+                  </div>
                   <div></div>
                 </div>
                 {lista.map((transport) => {
                   const statusInfo = getStatus(transport.fechaVencimiento);
-                  const fechaFormateada = transport.fechaVencimiento
-                    .split("-")
-                    .reverse()
-                    .join("/");
+                  const fechaFormateada = transport.fechaVencimiento.split("-").reverse().join("/");
                   return (
-                    <div
-                      key={transport.id}
-                      className={`transport-card ${statusInfo.class}`}
-                    >
+                    <div key={transport.id} className={`transport-card ${statusInfo.class}`}>
                       <div className="info-value">{transport.nombre}</div>
                       <div className="info-value">{transport.numeroRol}</div>
                       <div className="info-value">
                         {fechaFormateada}
-                        <span
-                          className={`status-badge status-${statusInfo.class}`}
-                        >
-                          {statusInfo.text}
-                        </span>
+                        <span className={`status-badge status-${statusInfo.class}`}>{statusInfo.text}</span>
                       </div>
                       <div className="card-actions">
-                        <button
-                          className="btn"
-                          title="Editar"
-                          onClick={() => onEdit(transport)}
-                        >
-                          ✏️
-                        </button>
-                        <button
-                          className="btn btn-danger"
-                          title="Eliminar"
-                          onClick={() => onDelete(transport.id)}
-                        >
-                          🗑️
-                        </button>
-                        <button
-                          className="btn"
-                          title="Verificar en Aduana"
-                          onClick={() => {
-                            window.open(
-                              "https://secure.aduana.gov.py/sqf/home.seam",
-                              "_blank"
-                            );
-                            navigator.clipboard.writeText(
-                              transport.numeroRol
-                            );
-                            setNoti(
-                              `🔍 ROL ${transport.numeroRol} copiado al portapapeles`
-                            );
-                          }}
-                        >
-                          🔍
-                        </button>
-                        {/* BOTÓN OMITIR / REACTIVAR ALERTA */}
-                        <button
-                          className="btn"
-                          style={{
-                            background: transport.omitido ? "#c3c3c3" : "#d46a6a",
-                            color: "#fff"
-                          }}
-                          title={transport.omitido ? "Volver a recibir alertas" : "No volver a notificar"}
-                          onClick={async () => {
-                            await setOmitido(transport.id, !transport.omitido);
-                            cargar(); // Recarga la lista para actualizar el estado
-                            setNoti(
-                              !transport.omitido
-                                ? "🔕 Alerta omitida para este transporte"
-                                : "🔔 Alerta reactivada para este transporte"
-                            );
-                          }}
-                        >
+                        <button className="btn" title="Editar" onClick={() => onEdit(transport)}>✏️</button>
+                        <button className="btn btn-danger" title="Eliminar" onClick={() => onDelete(transport.id)}>🗑️</button>
+                        <button className="btn" title="Verificar en Aduana" onClick={() => {
+                          window.open("https://secure.aduana.gov.py/sqf/home.seam", "_blank");
+                          navigator.clipboard.writeText(transport.numeroRol);
+                          setNoti(`🔍 ROL ${transport.numeroRol} copiado al portapapeles`);
+                        }}>🔍</button>
+                        <button className="btn" style={{ background: transport.omitido ? "#c3c3c3" : "#d46a6a", color: "#fff" }} title={transport.omitido ? "Volver a recibir alertas" : "No volver a notificar"} onClick={async () => {
+                          await setOmitido(transport.id, !transport.omitido);
+                          cargar();
+                          setNoti(!transport.omitido ? "🔕 Alerta omitida para este transporte" : "🔔 Alerta reactivada para este transporte");
+                        }}>
                           {transport.omitido ? "🔔" : "🚫"}
                         </button>
                       </div>
@@ -764,16 +623,7 @@ const App = () => {
         </div>
       </div>
       {noti && (
-        <div
-          className="alert alert-info"
-          style={{
-            position: "fixed",
-            top: 20,
-            right: 20,
-            zIndex: 1000,
-            maxWidth: 300
-          }}
-        >
+        <div className="alert alert-info" style={{ position: "fixed", top: 20, right: 20, zIndex: 1000, maxWidth: 300 }}>
           {noti}
         </div>
       )}
