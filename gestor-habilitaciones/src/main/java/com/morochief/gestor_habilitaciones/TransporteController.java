@@ -1,83 +1,119 @@
 package com.morochief.gestor_habilitaciones;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/transportes")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5173", "https://registro-firmas-frontend.onrender.com"})
 public class TransporteController {
-
+    
     private final TransporteService service;
-
+    
     public TransporteController(TransporteService service) {
         this.service = service;
     }
-
+    
     // Obtener todos los transportes
     @GetMapping
     public List<Transporte> getAll() {
         return service.getAll();
     }
-
+    
     // Obtener un transporte por ID
     @GetMapping("/{id}")
-    public Optional<Transporte> getById(@PathVariable Long id) {
-        return service.getById(id);
+    public ResponseEntity<Transporte> getById(@PathVariable Long id) {
+        Optional<Transporte> transporte = service.getById(id);
+        if (transporte.isPresent()) {
+            return ResponseEntity.ok(transporte.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
-
+    
     // Crear nuevo transporte
     @PostMapping
     public Transporte create(@RequestBody Transporte t) {
         if (t.getFechaCreacion() == null) {
             t.setFechaCreacion(LocalDate.now());
         }
-        if (t.isOmitido() == false) {
-            t.setOmitido(false);
-        }
+        // Asegurar que omitido sea false por defecto
+        t.setOmitido(false);
         return service.save(t);
     }
-
+    
     // Editar transporte existente
     @PutMapping("/{id}")
-    public Transporte update(@PathVariable Long id, @RequestBody Transporte t) {
-        t.setId(id);
-        return service.save(t);
+    public ResponseEntity<Transporte> update(@PathVariable Long id, @RequestBody Transporte t) {
+        Optional<Transporte> existing = service.getById(id);
+        if (existing.isPresent()) {
+            t.setId(id);
+            // Preservar la fecha de creación original
+            if (t.getFechaCreacion() == null) {
+                t.setFechaCreacion(existing.get().getFechaCreacion());
+            }
+            return ResponseEntity.ok(service.save(t));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
-
+    
     // Eliminar transporte
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        service.delete(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        if (service.getById(id).isPresent()) {
+            service.delete(id);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
-
-    // --- NUEVOS ENDPOINTS PARA OMISIÓN DE ALERTA ---
-
-    // Omitir alerta (PATCH: /api/transportes/{id}/omitir)
+    
+    // ENDPOINT CORREGIDO para cambiar estado omitido
     @PatchMapping("/{id}/omitir")
-    public Transporte omitirAlerta(@PathVariable Long id) {
+    public ResponseEntity<Transporte> cambiarEstadoOmitido(@PathVariable Long id, @RequestBody Map<String, Boolean> request) {
+        Optional<Transporte> opt = service.getById(id);
+        if (opt.isPresent()) {
+            Transporte t = opt.get();
+            // Obtener el valor de 'omitido' del request body
+            Boolean omitido = request.get("omitido");
+            if (omitido != null) {
+                t.setOmitido(omitido);
+                return ResponseEntity.ok(service.save(t));
+            } else {
+                return ResponseEntity.badRequest().build();
+            }
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    // Endpoints adicionales (opcionales, pero útiles)
+    @PatchMapping("/{id}/omitir-simple")
+    public ResponseEntity<Transporte> omitirAlerta(@PathVariable Long id) {
         Optional<Transporte> opt = service.getById(id);
         if (opt.isPresent()) {
             Transporte t = opt.get();
             t.setOmitido(true);
-            return service.save(t);
+            return ResponseEntity.ok(service.save(t));
         } else {
-            throw new RuntimeException("Transporte no encontrado");
+            return ResponseEntity.notFound().build();
         }
     }
-
-    // Reactivar alerta (PATCH: /api/transportes/{id}/reactivar)
+    
     @PatchMapping("/{id}/reactivar")
-    public Transporte reactivarAlerta(@PathVariable Long id) {
+    public ResponseEntity<Transporte> reactivarAlerta(@PathVariable Long id) {
         Optional<Transporte> opt = service.getById(id);
         if (opt.isPresent()) {
             Transporte t = opt.get();
             t.setOmitido(false);
-            return service.save(t);
+            return ResponseEntity.ok(service.save(t));
         } else {
-            throw new RuntimeException("Transporte no encontrado");
+            return ResponseEntity.notFound().build();
         }
     }
 }
